@@ -1,4 +1,4 @@
-package com.inbank.decision2026.endpoint;
+package com.inbank.decision2026.dto;
 
 import lombok.Getter;
 import lombok.Setter;

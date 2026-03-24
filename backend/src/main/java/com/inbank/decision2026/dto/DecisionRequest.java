@@ -1,4 +1,4 @@
-package com.inbank.decision2026.endpoint;
+package com.inbank.decision2026.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
