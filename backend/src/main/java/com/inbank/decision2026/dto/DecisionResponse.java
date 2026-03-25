@@ -1,14 +1,9 @@
 package com.inbank.decision2026.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
-
-@Getter
-@Setter
-@Component
-public class DecisionResponse {
-    private Integer loanAmount;
-    private Integer loanPeriod;
-    private String errorMessage;
+public record DecisionResponse(
+        boolean approved,
+        Integer approvedAmount,
+        Integer approvedPeriod,
+        String errorMessage
+) {
 }

@@ -1,12 +1,8 @@
 package com.inbank.decision2026.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
-public class DecisionRequest {
-    private String personalCode;
-    private Long loanAmount;
-    private int loanPeriod;
+public record DecisionRequest(
+        String personalCode,
+        Integer loanAmount,
+        Integer loanPeriod
+) {
 }

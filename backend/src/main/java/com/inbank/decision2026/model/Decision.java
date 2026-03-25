@@ -1,8 +1,8 @@
 package com.inbank.decision2026.model;
 
 public record Decision(
-        Integer loanAmount,
-        Integer loanPeriod,
+        Integer approvedAmount,
+        Integer approvedPeriod,
         String errorMessage
 ) {
 }
