@@ -21,15 +21,15 @@ public class DecisionService {
             return new Decision(null, null, "Applicant has debt");
         }
 
-        Decision decisionForSelectedPeriod = findBestDecisionForPeriod(creditModifier, loanPeriod);
-        if (decisionForSelectedPeriod != null) {
-            return decisionForSelectedPeriod;
+        Decision bestOfferForSelectedPeriod = findBestDecisionForPeriod(creditModifier, loanPeriod);
+        if (bestOfferForSelectedPeriod != null) {
+            return bestOfferForSelectedPeriod;
         }
 
         for (int period = loanPeriod + 1; period <= DecisionConstants.MAXIMUM_LOAN_PERIOD; period++) {
-            Decision decision = findBestDecisionForPeriod(creditModifier, period);
-            if (decision != null) {
-                return decision;
+            Decision bestOfferForNewPeriod = findBestDecisionForPeriod(creditModifier, period);
+            if (bestOfferForNewPeriod != null) {
+                return bestOfferForNewPeriod;
             }
         }
 
@@ -74,6 +74,10 @@ public class DecisionService {
 
         if (personalCode == null || personalCode.isBlank()) {
             throw new InvalidPersonalCodeException("Personal code is required");
+        }
+
+        if (!personalCode.matches("\\d{11}")) {
+            throw new InvalidPersonalCodeException("Personal code must contain exactly 11 digits");
         }
 
         if (loanAmount == null

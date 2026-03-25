@@ -4,6 +4,7 @@ public record DecisionResponse(
         boolean approved,
         Integer approvedAmount,
         Integer approvedPeriod,
-        String errorMessage
+        String errorMessage,
+        DecisionReason reason
 ) {
 }
