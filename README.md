@@ -1,6 +1,6 @@
 # Inbank Loan Decision Engine
 
-This project is a full-stack solution for the Inbank take-home assignment. It includes a Spring Boot backend with a single REST API endpoint and a React frontend that lets a user submit a loan request and immediately see the maximum offer the decision engine can approve.
+This project is a full-stack solution for the Inbank take-home assignment. It includes a Spring Boot backend with a single REST API endpoint and a React frontend that lets a user immediately see the maximum loan offer the decision engine can approve.
 
 Additional notes about product decisions, assumptions, trade-offs, and possible improvements are documented in [THOUGHTS_AND_ASSUMPTIONS.md](THOUGHTS_AND_ASSUMPTIONS.md).
 
@@ -18,13 +18,18 @@ Additional notes about product decisions, assumptions, trade-offs, and possible 
 
 ## Requirements
 
+### Local development
 - Java 25
 - Node.js
 - npm
 
+### Docker setup
+- Docker Desktop
+- Docker Compose
+
 ## Installation
 
-To install and run the project, follow these steps:
+To install and run the project locally, follow these steps:
 
 1. Clone the repository.
 2. Start the backend:
@@ -36,6 +41,42 @@ To install and run the project, follow these steps:
    - Run `npm run dev`.
 
 The backend runs on port `8080` by default and the frontend runs on Vite's default development port.
+
+## Running with Docker
+
+The project can also be started with Docker Compose.
+
+### Start the application
+
+From the project root, run:
+
+```bash
+docker compose up --build
+```
+
+### Open the application
+
+After the containers start, open:
+
+```text
+http://localhost
+```
+
+### What runs in Docker
+
+- `backend` – Spring Boot application
+- `frontend` – built React application served with nginx
+- `nginx` – reverse proxy routing frontend traffic and `/api` requests
+
+### Stop the application
+
+To stop the containers, press `Ctrl + C`.
+
+To remove the containers, run:
+
+```bash
+docker compose down
+```
 
 ## Endpoints
 
