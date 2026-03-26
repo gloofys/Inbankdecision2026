@@ -17,6 +17,7 @@ const AMOUNT_MAX = 10000;
 const PERIOD_MIN = 12;
 const PERIOD_MAX = 60;
 const PERIOD_STEP = 1;
+const AMOUNT_STEP = 100;
 
 function getRangeStyle(value: number, min: number, max: number): CSSProperties {
     const progress = ((value - min) / (max - min)) * 100;
@@ -36,11 +37,12 @@ function App() {
     const [loading, setLoading] = useState(false);
 
     const isPersonalCodeEmpty = personalCode.length === 0;
+    const isPersonalCodeIncomplete = personalCode.length > 0 && personalCode.length < 11;
+    const isUnsupportedPersonalCode = result?.reason === "UNSUPPORTED_PERSONAL_CODE";
     const hasDebt = result?.reason === "DEBT";
 
-    const personalCodeHintId = isPersonalCodeEmpty
-        ? "personal-code-error"
-        : "personal-code-help";
+    const showPersonalCodeError =
+        isPersonalCodeEmpty || isPersonalCodeIncomplete || isUnsupportedPersonalCode;
 
     useEffect(() => {
         const isValidFormat = /^\d{11}$/.test(personalCode);
@@ -106,43 +108,43 @@ function App() {
                 </div>
 
                 <div className="field-group">
-                    <label
-                        htmlFor="personal-code"
-                        className={`field-box ${isPersonalCodeEmpty ? "field-box-error" : ""}`}
-                    >
+                    <label className={`field-box ${showPersonalCodeError ? "field-box-error" : ""}`}>
                         <span
-                            className={`floating-label ${isPersonalCodeEmpty ? "floating-label-error" : ""}`}
+                            className={`floating-label ${
+                                showPersonalCodeError ? "floating-label-error" : ""
+                            }`}
                         >
                             Personal code
                         </span>
                         <input
-                            id="personal-code"
-                            name="personalCode"
-                            className={`text-input ${isPersonalCodeEmpty ? "text-input-error" : ""}`}
+                            className={`text-input ${showPersonalCodeError ? "text-input-error" : ""}`}
                             type="text"
                             inputMode="numeric"
                             autoComplete="off"
                             value={personalCode}
                             onChange={(e) => handlePersonalCodeChange(e.target.value)}
-                            aria-invalid={isPersonalCodeEmpty}
-                            aria-describedby={personalCodeHintId}
                             placeholder=""
+                            aria-invalid={showPersonalCodeError}
                         />
                     </label>
 
                     {isPersonalCodeEmpty ? (
-                        <p
-                            id="personal-code-error"
-                            className="helper-text helper-text-error"
-                            role="alert"
-                        >
+                        <p className="helper-text helper-text-error">
                             Please enter your personal code.
                         </p>
-                    ) : (
-                        <p id="personal-code-help" className="helper-text">
-                            Try: 49002010965, 49002010976, 49002010987, or 49002010998
+                    ) : isPersonalCodeIncomplete ? (
+                        <p className="helper-text helper-text-error">
+                            Personal code must be 11 digits long.
                         </p>
-                    )}
+                    ) : isUnsupportedPersonalCode ? (
+                        <p className="helper-text helper-text-error">
+                            Unsupported personal code.
+                        </p>
+                    ) : null}
+
+                    <p className="helper-text helper-text-secondary">
+                        Demo codes: 49002010965, 49002010976, 49002010987, or 49002010998
+                    </p>
                 </div>
 
                 <div className="slider-block">
@@ -155,7 +157,7 @@ function App() {
                         type="range"
                         min={AMOUNT_MIN}
                         max={AMOUNT_MAX}
-                        step={100}
+                        step={AMOUNT_STEP}
                         value={loanAmount}
                         onChange={(e) => setLoanAmount(Number(e.target.value))}
                         style={getRangeStyle(loanAmount, AMOUNT_MIN, AMOUNT_MAX)}
@@ -197,11 +199,7 @@ function App() {
                     </div>
                 </div>
 
-                <div
-                    className="result-section"
-                    aria-live="polite"
-                    aria-busy={loading}
-                >
+                <div className="result-section" aria-live="polite" aria-busy={loading}>
                     {hasDebt ? (
                         <div className="debt-result-box">
                             <p className="debt-result-message">
@@ -228,11 +226,13 @@ function App() {
                                         : "-- months"}
                             </h3>
 
-                            {result && !result.approved && result.errorMessage && !hasDebt && (
-                                <p className="inline-message" role="alert">
-                                    {result.errorMessage}
-                                </p>
-                            )}
+                            {result &&
+                                !result.approved &&
+                                result.errorMessage &&
+                                !hasDebt &&
+                                !isUnsupportedPersonalCode && (
+                                    <p className="inline-message">{result.errorMessage}</p>
+                                )}
                         </>
                     )}
 
